@@ -1,4 +1,97 @@
-# Базовий синтаксис класу
+# Об'єкти. Класи. Базовий синтаксис класу
+
+## Об'єкти. Класи
+
+Java є об'єктно-орієнтованою мовою, тому такі поняття як "клас" і "об'єкт" грають в ньому ключову роль. Будь-яку програму на Java можна уявити як набір взаємодіючих між собою об'єктів.
+
+Шаблоном або описом об'єкта є клас, а об'єкт являє екземпляр цього класу. Можна ще провести наступну аналогію. У нас у всіх є деяке уявлення про людину - наявність двох рук, двох ніг, голови, тулуба і т.д. Є деякий шаблон - цей шаблон можна назвати класом. Реально ж існуюча людина (фактично екземпляр даного класу) є об'єктом цього класу.
+
+## Базовий синтаксис класу і його ініціалізація
+
+Розгляньмо базовий синтаксис класу в java:
+
+```java
+[modifier] class [identiofier] [extends/implements] [..class, interface]{
+
+	[identifier](){} //constructor (конструктор)
+
+	{
+		//динамічний ініціалізатор
+	}
+
+	static {
+		// Статичний ініціалізатор
+	}
+
+	finilize(){} //destructor(деструктор)
+
+	[modifier] [type] [name]; //property(атрибут)
+	[modifier] [return_type] [identifier]([params]){ //method(метод)
+		[some_code];
+	}
+}
+```
+
+Приклад:
+
+```java
+class Student {
+	String name;
+	
+	Student(String name){
+		this.name = name;
+	}
+	
+	void printName() {
+		System.out.println(this.name);
+	}
+}
+```
+
+Синтаксис створення об'єкта, використовуючи ключове слово new наступний:
+
+```java
+[type] [indentifier] = new([parameters for constructor]);
+
+Student student = new Student("Alex");
+```
+
+## Getters/Setters
+
+У кожного об'єкта є свої поля, згідно з принципом ООП поля класу треба оголошувати приватним модифікатором доступу. І отже, щоб змінювати і отримувати інформацію про поля об'єкта якраз і створюють геттери і сеттери з публічним доступом. Геттер видає значення поля викликає об'єкта, а сетер встановлює значення цього поля.
+
+Зазвичай класи, які Ви будете писати виглядають наступним чином:
+
+```java
+class Student {
+    private int age;
+    
+    public int getAge() {
+        return this.age;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
+    private String name;
+    
+    public String getName() {
+        return this.name;
+    }
+    
+    public void String setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+Варто зауважити, що існує і інша точка зору на геттери і сеттери. Ось деякі недоліки використання геттерів і сеттерів:
+
+- Об'єкт може бути розібраний по частинах іншими об'єктами, тому що вони в змозі вбудувати будь-які дані в об'єкт, через сеттери. Об'єкт просто не може приховати свій власний стан досить безпечно, тому що будь-хто може це стан змінити.
+- Більшість програмістів вірять, що об'єкт - це структура даних з методами. Геттери і Сетери - не зло. Але більшість об'єктів, для яких створюються геттери і сеттери просто містять в собі дані. Це представлення викривляє ООП.
+
+Детальніше можна прочитати [тут](https://www.javaworld.com/article/2073723/why-getter-and-setter-methods-are-evil.html)
 
 ## Java не підтримує перезавантаження операторів
 
@@ -77,8 +170,25 @@ class Student {
 Приклад:
 
 ```java
-
+class Student {
+	private int cardNumber;
+	
+	public Student(int cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.cardNumber;
+	}
+}
+...
+Student st = new Student(12);
+System.out.println(st.hashCode());
+...
 ```
+
+![](../resources/img/2/7.png)
 
 ## equals(Object obj)
 
@@ -87,14 +197,42 @@ class Student {
 Стандартна реалізація:
 
 ```java
-
+public boolean equals(Object obj) {
+	return (this == obj);
+}
 ```
 
 Приклад перевизначення **equals()**:
 
 ```java
-
+class Student {
+	private int cardNumber;
+	
+	public int getCardNumber() {
+		return this.cardNumber;
+	}
+	
+	public Student(int cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this.cardNumber == ((Student)obj).getCardNumber())
+			return true;
+		return false;
+	}
+}
+...
+Student st1 = new Student(1);
+Student st2 = new Student(1);
+Student st3 = new Student(2);
+System.out.println("st1 == st2 " + st1.equals(st2));
+System.out.println("st1 == st3 " + st1.equals(st3));
+...
 ```
+
+![](../resources/img/2/8.png)
 
 ## getClass()
 
@@ -127,6 +265,125 @@ class Student {
 **Про те як замінити наслідування композицією ми поговоримо пізніше.**
 
 ## Поліморфізм
+
+**Поліморфізм** - це можливість застосування однойменних методів з однаковими або різними наборами параметрів в одному класі або в групі класів, пов'язаних відношенням наслідування.
+
+Розгляньмо приклад. Допустимо в нас є об'єкт, який відповідальний за генерацію звіта. В ньому є метод report. Спочатку звіт повинен був генеруватися як просто текст. Далі функціональні вімоги змінилися і потрібно генерувати як текст так і xml. І можливо в подальшому формати будуть змінюватися.
+
+Ось код, який вирішує поставлену задачу, використовуючи поліморфізм.
+
+Визначимо базовий клас, який буде використовуватися для всіх класів, які будуть виступати в якості формату звіта.
+
+```java
+class ReportFormatter {
+	public String format(String reportBody) {
+		return reportBody;
+	}
+}
+```
+
+ReportFormatter містить всього один метод, в даному випадку він приймає звіт і повертає йогож. Створимо нащадка цього класу, перевизначивши метод format:
+
+```java
+class XMLReportFormatter extends ReportFormatter {
+	@Override
+	public String format(String reportBody) {
+		return "<xml>" + reportBody + "</xml>";
+	}
+}
+```
+
+Створимо клас Report, який для цілей форматування звіту буде використовувати об'єкти типу ReportFormatter:
+
+```java
+class Report {
+	private ReportFormatter formatter;
+	
+	public Report(ReportFormatter formatter) {
+		this.formatter = formatter;
+	}
+	
+	public String report() {
+		String reportText = "Some report text";
+		return this.formatter.format(reportText);
+	}
+
+}
+```
+
+Тепер для того, щоб створити звіт у форматі простого тексту нам достатньо створити екземпляр ReportFormatter і передати його в конструктор Report:
+
+```java
+	ReportFormatter formatter = new ReportFormatter();
+	Report report = new Report(formatter);
+	System.out.println(report.report());
+```
+
+![](../resources/img/2/2.png)
+
+
+Відповідно, щоб отримати звіт у форматі xml, нам потрібно передати об'єкт типу XMLFormatter, оскільки він є нащадком ReportFormatter віе може бути приведений до батьківського типу:
+
+```java
+ReportFormatter formatter = new XMLReportFormatter();
+Report report = new Report(formatter);
+System.out.println(report.report());
+```
+
+![](../resources/img/2/2.png)
+
+А для того, щоб додати новий формат звіту до системи достатньо створити ще одного нащадка ReportFormatter:
+
+```java
+class HTMLReportFormatter extends ReportFormatter {
+	@Override
+	public String format(String reportBody) {
+		return "<html>" + reportBody + "</html>";
+	}
+}
+
+...
+ReportFormatter formatter = new HTMLReportFormatter();
+		Report report = new Report(formatter);
+		System.out.println(report.report());
+...
+```
+
+![](../resources/img/2/4.png)
+
+
+### Ad-hoc polymorphism(method overloading)
+
+Перевантаження методу - це функція, яка дозволяє класу мати більше одного методу, що має однакове ім'я, якщо їх аргументи списки різні. Перезавантаження також може бути застосоване до конструктора:
+
+```java
+class A {
+	public A(int a) {
+		System.out.println("Using constructor(int)");
+	}
+	
+	public A(int a, int b) {
+		System.out.println("Using constructor(int,int)");
+	}
+	
+	public void sum(int a) {
+		System.out.println("Using sum(int)");
+	}
+	
+	public void sum(int a, int b) {
+		System.out.println("Using sum(int, int)");
+	}
+}
+...
+A a = new A(3);
+a.sum(5);
+A a1 = new A(3,2);
+a1.sum(5,4);
+...
+```
+
+![](../resources/img/2/5.png)
+
 
 ### Replace conditional with polymorphism
 
@@ -323,11 +580,82 @@ public class Main {
 9. Динамічний блок ініціалізації похідного класу.
 10. Конструктор похідного класу.
 
-
-
 # Абстрактні класи
 
+Крім звичайних класів в Java є абстрактні класи. Абстрактний клас схожий на звичайний клас. В абстрактному класі також можна визначити поля і методи, в той же час не можна створити об'єкт або екземпляр абстрактного класу. Абстрактні класи покликані надавати базовий функціонал для класів-спадкоємців. А похідні класи вже реалізують цей функціонал.
+
+```java
+abstract class Product {
+	
+}
+```
+
+Крім звичайних методів абстрактний клас може містити абстрактні методи. Такі методи визначаються за допомогою ключового слова abstract і не мають ніякого функціоналу:
+
+```java
+public abstract void display();
+```
+
+Розглянемо правила абстрактних класів:
+- Абстрактний клас повинен оголошуватися, використовуючи ключове слово abstract
+- Абстрактний клас може мати абстрактні і не абстрактні методи
+- Неможливо створити екземплря абстрактного класу
+- Він може мати final - методи
+- Може мати конструктор і статичні методи
+
+![](../resources/img/2/6.png)
+
+Приклад:
+
+```java
+abstract class Shape {
+	public Shape() {}
+	
+	public abstract void draw();
+}
+
+class Rectangle extends Shape {
+	public void draw() {
+		System.out.println("Drawing rectangle");
+	}
+}
+```
+
 # Інтерфейси
+
+Інтерфейс є типом - посиланням в Java. Вони схожі на абстрактні клас. Це сукупність абстрактних методів. Клас реалізує інтерфейс, тим самим успадковуючи абстрактні методи інтерфейсу.
+
+Поряд з абстрактними методами інтерфейс може також містити константи, методи за замовчуванням, статичні методи та вкладені типи. Тіла методів існують лише для стандартних методів та статичних методів.
+
+Приклад:
+
+```java
+interface Readable {
+	void read(); //public void read
+	static int GLOBAL_READ_FLAG = 0; //public final static int
+	int LOCAL_READ_FLAG = 2;
+	static void checkEnv() {
+		System.out.println("Cheking env");
+	}
+	default void lock() {
+		System.out.println("Trying to lock read");
+	}
+}
+```
+
+Описаний інтерфейс містить:
+- публічний абстрактний метод read
+- статичну константу
+- локальну константу
+- публічний статичний метод checkEnv
+- стандартний метод lock
+
+**Стандартні методи:**
+
+До Java 8 інтерфейси могли мати лише абстрактні методи. Реалізація цих методів повинна забезпечуватися в окремому класі. Отже, якщо новий метод потрібно додати в інтерфейс, код його реалізації повинен бути наданий у класі, що реалізує той самий інтерфейс. Щоб подолати цю проблему, Java 8 представила концепцію методів за замовчуванням, які дозволяють інтерфейсам мати методи з реалізацією, не впливаючи на класи, які реалізують інтерфейс.
+
+> На відмінну від наслідування, коли один клас може бути унаслідуваний від ондного єдиного класу, клас може реалізувати безліч інтерфейсів.
+
 
 ## Поліморфізм, використовуючи інтерфейси
 
@@ -414,3 +742,12 @@ sizeOf(reference) + sizeOf(MyInt)
 # Домашня робота
 
 # Контрольні запитання
+
+1. Поясніть терміни "клас" і об'єкт.
+2. Що таке геттери і сеттери? Які ви знаєте недоліки використання геттерів і сеттерів?
+3. Назвіть методи класу Object.
+4. Що таке пакети в java?
+4. Поясніть принципи наслідування, інкапсуляція і наслідування.
+5. Що таке абстрактні класи?
+6. Що таке інтерфейси? Що можуть містити інтерфейси?
+7. Як порахувати, скільки займатиме об'єкт в java?
