@@ -236,19 +236,165 @@ System.out.println("st1 == st3 " + st1.equals(st3));
 
 ## getClass()
 
-???????????????
+Повертає клас виконання об’єкта.
 
 ## finalize()
 
 Цей метод викликається безпосередньо перед тим, як об’єкт буде знищенно. Колектор сміття викликає його на об'єкті, коли збирач сміття визначає, що більше немає посилань на об'єкт.
 
+## clone()
+
+Метод clone() створює точну, "глибоку" копію об'єкта. Він створює новий екземпляр класу поточного об'єкта та ініціалізує всі його поля з точно вмістом відповідних полів цього об’єкта.
+
 # Пакети
+
+Пакети використовуються в Java для запобігання іменування конфліктів, контролю доступу, полегшення пошуку / розміщення та використання класів, інтерфейсів, перерахувань та приміток тощо.
+
+Привила визначення пакетів:
+- Імена пакетів записуються у нижньому регістрі, щоб уникнути конфлікту з іменами класів або інтерфейсів.
+- Компанії використовують своє інвертоване доменне ім’я для початку імен пакунків, наприклад, com.example.mypackage для пакету з назвою mypackage, створеного програмістом на example.com.
+- Пакети на самій мові Java починаються з java. або javax.
+
+Минтаксис визначення пакету:
+```java
+package package_name;
+//class definition code
+```
+
+> Визначення пакету повино бути поміщено до будь-якого коду.
+
+У деяких випадках ім'я домену в може бути невалідним пакетом. Це може статися, якщо доменне ім’я містить дефіс або інший спеціальний символ, якщо ім'я пакета починається з цифри чи іншого символу, який неможна використовувати як початок імені Java, або якщо ім'я пакета містить зарезервоване ключове слово Java, наприклад "int". У цьому випадку пропонується умова додати підкреслення. Наприклад:
+
+|Невалідне|Валідне|
+|-|-|
+|hyphenated-name.example.org|org.example.hyphenated_name|
+|example.int|int_.example|
+|123name.example.com|com.example._123name|
+
+
+## Імпортування класів
+
+Для імпортування класів із пакетів використовується ключове слово import:
+
+```java				
+import [package].[class_name]; //Один клас із пакету
+import [package].*; //Всі класи із пакету			
+```
+
+```java
+import ua.edu.kdu.ius.Animal;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Animal animal = new Animal("Some name");
+	}
+}
+```
+
+## Статичне імпортування
+
+В java також існує імпортування статичних методів і полів з інших класів:
+
+```java
+package ua.edu.kdu.ius;
+
+public class Animal {
+
+	private String name;
+
+	public Animal(String name){
+		this.name = name;
+	}
+
+	public void setName(String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return this.name;
+	}
+
+	public static void printAnimal(Animal animal){
+		if(animal == null)
+			return;
+		System.out.println("Animal name: " + animal.name);
+	}
+}
+```
+
+```java
+import ua.edu.kdu.ius.Animal;
+import static ua.edu.kdu.ius.Animal.printAnimal;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Animal animal = new Animal("Some name");
+		printAnimal(animal);
+	}
+}
+```
 
 # Три принципи ООП
 
 ## Інкапсуляція
 
+Інкапсуляція - можливість приховування реалізації будь-яких частин модуля або об'єкта від зовнішнього світу (від клієнта). Це означає, що маніпулюючи модифікаторами доступу, можна приховати або відкрити тільки певні властивості, методи або класи для того, щоб непотрібні для класу-клієнта дані не були доступні.
+
+Модифікатори доступу:
+
+![](../resources/img/2/10.png)
+
 ## Наслідування
+
+Наслідування дозволяє описати новий клас на основі вже існуючого (батьківського), при цьому властивості і функціональність батьківського класу запозичуються новим класом.
+
+Для наслідування класу використовується ключове слово extends.
+
+> Java не підтримує множинне наслідування.
+
+Приклад:
+
+```java
+class Animal {
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Animal(String name) {
+		super();
+		this.name = name;
+	}
+	
+	
+}
+
+class Dog extends Animal {
+
+	public Dog(String name) {
+		super(name);
+	}
+	
+}
+
+...
+Dog dog = new Dog("Sharik");
+System.out.println(dog.getName());
+...
+```
+
+![](../resources/img/2/9.png)
+
+Доступ до батьківських полів і методів наступний:
+
+![](../resources/img/2/10.png)
 
 ### Наслідування - зло?
 
@@ -369,28 +515,28 @@ class A {
 	public void sum(int a) {
 		System.out.println("Using sum(int)");
 	}
-	
+		
 	public void sum(int a, int b) {
-		System.out.println("Using sum(int, int)");
+		System.out.println("Using sum(i		nt, int)");
 	}
-}
+}	
 ...
 A a = new A(3);
 a.sum(5);
 A a1 = new A(3,2);
 a1.sum(5,4);
 ...
-```
+```		
 
 ![](../resources/img/2/5.png)
 
 
 ### Replace conditional with polymorphism
 
-Такі конструкції як if,switch є елементами структурного програмування. Якщо ці конструкції зустрічаються у Вашому коді і створені для того, щоб виконувати рогалудження в залежності від типу об'єкта або його атрибуватів можна застосувати такий прийом як "Replace switch with polymorphism".
+Такі конструкції як if,switch є елементами структурного програмування. Якщо ці конструкції зустрічаються у Вашому коді і	 створені для того, щоб виконувати рогалудження в залежності від типу об'єкта або його атрибуватів можна застосувати такий прийом як "Replace switch with polymorphism".
 
 Розгляньмо наступний код:
-
+Привіт. Відкрийте, будь-ласка, serial -console, мені вже потрібно або прод оновлювати або базу витягувати на свій vps.
 ```java
 class SalesPerson {
 	
@@ -659,11 +805,152 @@ interface Readable {
 
 ## Поліморфізм, використовуючи інтерфейси
 
-# Абстрактні класи vs Інтерфейси
+Давайте перепишемо приклад із розділу про поліморфізм використовуючи інтерфейси. Тепер базовий клас ReportFormatter стає інтерфейсом:
+
+```java
+interface ReportFormatter {
+	String format(String reportBody);
+}
+
+class XMLReportFormatter implements ReportFormatter {
+
+	@Override
+	public String format(String reportBody) {
+		return "<xml>" + reportBody + "</xml>";
+	}
+	
+}
+
+class Report {
+	private ReportFormatter formatter;
+	
+	public Report(ReportFormatter formatter) {
+		this.formatter = formatter;
+	}
+	
+	public String report() {
+		String reportText = "Some report text";
+		return this.formatter.format(reportText);
+	}
+
+}
+...
+ReportFormatter formatter = new XMLReportFormatter();
+Report report = new Report(formatter);
+System.out.println(report.report());
+...
+```
+
+![](../resources/img/2/11.png)
 
 # Заміна наслідування композицією
 
+Припустимо, що в нас є клас, який може прочитати файл з диску і повернути його контент:
+
+```java
+class Read {
+	
+	private String fileName;
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public Read(String fileName) {
+		super();
+		this.fileName = fileName;
+	}
+	
+	public String read() {
+		return "Content of file";
+	}
+	
+}
+```
+
+Нам потрібно створити ще один класс ConfigFile, який також може прочитати контент з файла. Замість того, щоб наслідувати клас File, ми можемо створити поле в класі FileConfig і делегувати виконання читання:
+
+```java
+class ConfigFile {
+	
+	private File file;
+
+	public ConfigFile(File file) {
+		super();
+		this.file = file;
+	}
+	
+	public String getConfigContent() {
+		return this.file.read();
+	}
+}
+...
+ConfigFile cf = new ConfigFile(new File("text.txt"));
+System.out.println(cf.getConfigContent());
+...
+```
+
+![](../resources/img/2/13.png)
+
 # Enum
+
+Enum - це особливий тип даних, який дозволяє змінній бути набором заздалегідь визначених констант. Змінна повинна дорівнювати одному із попередньо визначених для неї значень. Найпоширеніші приклади включають напрямки компаса (значення Північного, Південного, Східного та Західного) та дні тижня.
+
+Оскільки enum містить константи, назви полів типу enum пишуться великими літерами.
+
+```java
+enum Day {
+	SUNDAY, MONDAY, TUESDAY, WEDNESDAY,
+	THURSDAY, FRIDAY, SATURDAY 
+}
+
+public class Main {
+	Day day;
+	
+	public Main(Day day) {
+		this.day = day;
+	}
+	
+	public void tellItLikeItIs() {
+		switch (day) {
+			case MONDAY:
+				System.out.println("Mondays are bad.");
+				break;
+					
+			case FRIDAY:
+				System.out.println("Fridays are better.");
+				break;
+						 
+			case SATURDAY: case SUNDAY:
+				System.out.println("Weekends are best.");
+				break;
+						
+			default:
+				System.out.println("Midweek days are so-so.");
+				break;
+		}
+	}
+	
+	public static void main(String[] args) {
+		Main firstDay = new Main(Day.MONDAY);
+		firstDay.tellItLikeItIs();
+		Main thirdDay = new Main(Day.WEDNESDAY);
+		thirdDay.tellItLikeItIs();
+		Main fifthDay = new Main(Day.FRIDAY);
+		fifthDay.tellItLikeItIs();
+		Main sixthDay = new Main(Day.SATURDAY);
+		sixthDay.tellItLikeItIs();
+		Main seventhDay = new Main(Day.SUNDAY);
+		seventhDay.tellItLikeItIs();
+	}
+}
+```
+
+![](../resources/img/2/12.png)
 
 # Скільки пам'яті займають об'єкти
 
@@ -707,7 +994,7 @@ sizeOf(reference) + sizeOf(Integer)
 
 В принципі, розмір посилання в JVM залежить від її розрядності. Тому в 32-х розрядних JVM розмір посилання зазвичай 4 байта, а в 64-х розрядних - 8 байт. Хоча ця умова і не обов'язкова.
 
-**Беручи до уваги всю цю інформацію, спробуймо приблизно розрахувати розмір об'єкта і порівняти розрахований розмір із дійсним, який нам покажи JVM:**
+**Беручи до уваги всю цю інформацію, спробуймо приблизно розрахувати розмір об'єкта**
 
 Розраховувати розмір ми будемо для наступного класу:
 
@@ -737,7 +1024,7 @@ sizeOf(reference) + sizeOf(MyInt)
 
 Припустимо, що наш код буде виконуватися на 64-х бітній платформі, тоді sizeOf(reference) - 8 байт. Тепер нам потрібно розрахувати sizeOf(MyInt), це доволі просто, кожен об'єкт містить заголовок, беручи до уваги розрядність це буде 16 байт. Наш клас містить всього-навсього одне примітивне поле, це ще 4 байти. Складаємо докупи: 8 + 16 + 4 = 28 байт.
 
-Тепер дізнаймося дійсний розмір об'єкта, виконавши наступний код:
+> Disclaimer. Розрахований розмір не є точним, на нього можуть впливати багато факторів.
 
 # Домашня робота
 
