@@ -1028,6 +1028,56 @@ sizeOf(reference) + sizeOf(MyInt)
 
 # Домашня робота
 
+Завантажте [Eclipse](https://www.eclipse.org/downloads/). Створіть новий Java додаток, виконайте всі варіанти.
+
+## Варіанти
+
+1. Створіть клас Enemy(health, dmg, type). Створіть метод у класі Enemy - attack, який наносить dmg + бонусний урон в залежності від типу. Переробіть завдання, використовуючи "replace conditional with polymorphism".
+2. Створіть клас VideConverter, який взалежності від інших об'єктів(які реалізують інтерфейс Encoder) конвертують відео в різні формати.(Дійсну логіку конвертування імплементить не потрібно).
+3. Є наступний код:
+```java
+class UseCompact {
+	
+	private double value;
+	
+	public UseCompact(double value) {
+		super();
+		this.value = value;
+	}
+
+	public double useCompact() {
+		return this.value;
+	}
+}
+
+class DoubleBox {
+	private double value;
+	public DoubleBox(double value, int presicion, UseCompact useCompact) {
+		super();
+		this.value = value;
+		this.presicion = presicion;
+		this.useCompact = useCompact;
+	}
+	private int presicion;
+	private UseCompact useCompact;
+	public double getValue() {
+		return value;
+	}
+	public void setValue(double value) {
+		this.value = value;
+	}
+	public int getPresicion() {
+		return presicion;
+	}
+	public void setPresicion(int presicion) {
+		this.presicion = presicion;
+	}
+	
+}
+```
+
+Розрахуйте, скільки, приблизно буде займати об'єкт DoubleBox, розпишіть логіка розрахунку.
+
 # Контрольні запитання
 
 1. Поясніть терміни "клас" і об'єкт.
