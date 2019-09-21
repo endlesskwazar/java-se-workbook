@@ -102,6 +102,32 @@ public interface MyInt {
 
 ### Tasks
 ```java
+class Vector{
+  private int value;
+
+  public Vector(int value){
+    this.value = value;
+  }
+
+  public intVal(){
+    return this.value;
+  }
+
+  public static Vector operator+(Vector vec1, Vector vec2){
+    return new Vector(vec1.intVal() + vec2.intVal());
+  }
+}
+```
+
+Який результат виконання?
+
+1. Все ок.
+2. Код не скомпілюється.
+3. Неправильний синтаксис перезавантаження оператора.
+
+
+### Tasks
+```java
 Integer i1 = 22;
 Integer i2 = 22;
 if (i1 == i2)
