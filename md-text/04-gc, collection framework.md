@@ -4,27 +4,29 @@
 
 # Java Collection Framework
 
-# Interfaces
+**Java Collection Framework** - ієрархія інтерфейсів і їх реалізацій, яка є частиною JDK і дозволяє розробнику користуватися великим колічесво структур даних з «коробки».
 
-# Collections
+## Ієрархія класів і інтерфейсів
 
-## ArrayList
+## Реалізації
 
-## LinkedList
+### ArrayList
 
-## Vector
+### LinkedList
 
-## HashSet
+### Vector
 
-## LinkedHashSet
+### HashSet
 
-## TreeSet
+### LinkedHashSet
 
-## HashMap
+### TreeSet
 
-## TreeMap
+### HashMap
 
-# Як вибрати структуру даних?
+### TreeMap
+
+## Як вибрати структуру даних?
 
 # Домашнє завдання
 
