@@ -1,6 +1,6 @@
 # Generics
 
-
+Інформація в презентації.
 
 # Java Collection Framework
 
@@ -261,38 +261,131 @@ for (Integer integer : integers) {
 
 #### HashSet
 
+**HashSet** - реалізація інтерфейсу Set, що базується на HashMap. Усередині використовує об'єкт HashMap для зберігання даних. Як ключ використовується для додавання, а в якості значення - об'єкт-заглушка (new Object ()). Через особливості реалізації порядок елементів не гарантується при додаванні.
+
+```java
+HashSet<String> s = new HashSet<String>();
+s.add("some");
+
+for (String elem: s) {
+    System.out.println(elem);
+}
+```
+
 #### LinkedHashSet
 
+**LinkedHashSet** - відрізняється від HashSet тільки тим, що в основі лежить LinkedHashMap замість HashSet. Завдяки цій відмінності порядок елементів при обході колекції є ідентичним порядку додавання елементів.
+
+```java
+LinkedHashSet<String> s = new LinkedHashSet<String>();
+s.add("some");
+s.add("aa");
+s.add("bbb");
+
+for (String elem: s) {
+    System.out.println(elem);
+}
+```
+
 #### TreeSet
+
+**TreeSet** - аналогічно іншим класам-реалізацій інтерфейсу Set містить в собі об'єкт NavigableMap, що й обумовлює його поведінку. Надає можливість управляти порядком елементів в колекції за допомогою об'єкта Comparator, або зберігає елементи з використанням "natural ordering".
+
+```java
+TreeSet<String> s = new TreeSet<String>();
+s.add("some");
+s.add("aa");
+s.add("bbb");
+
+for (String elem: s) {
+    System.out.println(elem);
+}
+```
 
 ### Ітнерфейс Queue
 
 #### PriorityQueue
 
+Особливістю даної черги є можливість управління порядком елементів. За замовчуванням, елементи сортуються з використанням «natural ordering», але це поведінка може бути перевизначити за допомогою об'єкта Comparator, який задається при створенні черги. Ця колекція не підтримує null як елементи.
+
+```java
+PriorityQueue<Integer> q = new PriorityQueue<>();
+q.add(20);
+q.add(1);
+
+for (Integer elem: q) {
+    System.out.println(elem);
+}
+
+q.peek();
+q.poll();
+```
+
 #### ArrayDeque
+
+
 
 ### Ітнерфейс Map
 
 #### Hashtable
 
+**Hashtable** - реалізація такої структури даних, як хеш-таблиця. Вона не дозволяє використовувати null як значення або ключа. Ця колекція була реалізована раніше, ніж Java Collection Framework, але надалі була включена в його склад. Як і інші колекції з Java 1.0, Hashtable є синхронізованою (майже всі методи позначені як synchronized). Через цю особливість у неї є істотні проблеми з продуктивністю і, починаючи з Java 1.2, в більшості випадків рекомендується використовувати інші реалізації інтерфейсу Map через відсутність у них синхронізації. Дана колекція не зберігає порядок елементів.
+
+```java
+Hashtable<String, String> hashtable = new Hashtable<String, String>();
+hashtable.put("key1", "value1");
+hashtable.put("key2", "value2");
+
+for(String key: hashtable.keySet()) {
+    System.out.println("Value is " + hashtable.get(key) + " for key " + key );
+}
+```
+
 #### HashMap
+
+**HashMap** - колекція є альтернативою Hashtable. Двома основними відмінностями від Hashtable є те, що HashMap не синхронізована і HashMap дозволяє використовувати null як в якості ключа, так і значення. Так само як і Hashtable, дана колекція не є упорядкованою: порядок зберігання елементів залежить від хеш-функції.
+
+```js
+HashMap<String, String> hashtable = new HashMap<String, String>();
+hashtable.put("key1", "value1");
+hashtable.put("key2", "value2");
+
+for(String key: hashtable.keySet()) {
+    System.out.println("Value is " + hashtable.get(key) + " for key " + key );
+}
+```
 
 #### LinkedHashMap
 
+**LinkedHashMap** - це впорядкована реалізація хеш-таблиці. Тут, на відміну від HashMap, порядок перебору рівний порядку додавання елементів. Дана особливість досягається завдяки двонаправленим зв'язків між елементами (аналогічно LinkedList). Але ця перевага має також і недолік - збільшення пам'яті, яке занімає колекція.
+
+```java
+LinkedHashMap<String, String> hashtable = new LinkedHashMap<String, String>();
+hashtable.put("key1", "value1");
+hashtable.put("key2", "value2");
+
+for(String key: hashtable.keySet()) {
+    System.out.println("Value is " + hashtable.get(key) + " for key " + key );
+}
+```
+
 #### TreeMap
+
+**TreeMap** - реалізація Map заснована на червоно-чорних деревах. Як і LinkedHashMap є впорядкованою. За замовчуванням, колекція сортується по ключам.
 
 ## Як вибрати структуру даних?
 
 # Домашнє завдання
 
-# Варіанти
+Запропонуйте власну реалізацію динамічного масиву, який заснований на звичайномк масивові. Інтерфейс - add(elem), remove(elem), remove(index), get(index), isExists(elem).
 
 # Контрольні запитання
 
-1. sdf
-2. dsf
-3. dsf
-4. dsf
-5. dsf
-6. dsf
-7. dsf
+1. Що таке Generics і навіщо вони потрібні?
+2. Що таке Java Collection Framework?
+3. Перелічіть інтерфейси Java Collection Map.
+4. Поясніть колекції - Hashtable, HashMap, LinkedHashMap, TreeMap.
+4. Поясніть колекції - Vector, Stack, ArrayList, LinkedList.
+4. Поясніть колекції - HashSet, LinkedHashSet, TreeSet.
+4. Поясніть колекції - PriorityQueue, ArrayDeque.
+4. Як вибрати, яку колекцію використовувати?
