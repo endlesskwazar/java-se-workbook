@@ -504,11 +504,139 @@ public interface ArgumentsProcessor<X extends Number>
 
 ### Вбудовані функціональні інтерфейси
 
-## Приклади
+**Predicate**
+
+```java
+@FunctionalInterface
+public interface Predicate<T> {
+    boolean test(T t);
+}
+```
+
+Predicate - це твердження, яке може бути істинним або хибним залежно від значень його змінних. Це можна розглядати як функцію, яка повертає значення, яке є істинним, або хибним.
+
+```java
+Predicate<String> isALongWord = new Predicate<String>() {
+    @Override
+    public boolean test(String t) {
+        return t.length() > 10;
+    }
+};
+String s = "successfully"
+boolean result = isALongWord.test(s);
+```
+
+**Consumer**
+
+```java
+@FunctionalInterface
+public interface Consumer<T> {
+    void accept(T t);
+}
+```
+
+Цей функціональний інтерфейс являє собою операцію, яка приймає єдиний вхідний аргумент і не повертає результату. Справжній результат - це побічні ефекти, які він викликає.
+
+```java
+class Product {
+  private double price = 0.0;
+
+  public void setPrice(double price) {
+    this.price = price;
+  }
+
+  public void printPrice() {
+    System.out.println(price);
+  }
+}
+
+public class Test {
+  public static void main(String[] args) {
+    Consumer<Product> updatePrice = p -> p.setPrice(5.9);
+    Product p = new Product();
+    updatePrice.accept(p);
+    p.printPrice();
+  }
+}
+```
+
+**Function**
+
+Цей функціональний інтерфейс являє собою функцію, яка приймає один аргумент і видає результат. Одне із використання, наприклад, це перетворення з одного об'єкта на інший.
+
+```java
+@FunctionalInterface
+public interface Function<T, R> {
+    R apply(T t);
+}
+```
+
+```java
+public class Test {
+  public static void main(String[] args) {
+    int n = 5;
+    modifyTheValue(n, val-> val + 10);
+    modifyTheValue(n, val-> val * 100);
+  }
+
+  static void modifyValue(int v, Function<Integer, Integer> function){
+    int result = function.apply(v);
+    System.out.println(newValue);
+  }
+
+}
+```
+
+**Supplier**
+
+Цей функціональний інтерфейс робить протилежне до Consumer, він не бере аргументів, але повертає певне значення.
+
+```java
+@FunctionalInterface
+public interface Supplier<T> {
+    T get();
+}
+```
+
+```java
+public class Program {
+    public static void main(String[] args) {
+        int n = 3;
+        display(() -> n + 10);
+        display(() -> n + 100);
+    }
+
+    static void display(Supplier<Integer> arg) {
+        System.out.println(arg.get());
+    }
+}
+```
+
+**BiPredicate**
+
+BiPredicate <T, U> схожий на Predicate, але тут ви можете створити умову на основі 2 заданих параметрів.
+
+```java
+@FunctionalInterface
+public interface BiPredicate<T, U> {
+    boolean test(T t, U u);
+}
+```
+
+**BiConsumer**
+
+BiConsumer <T, U> схожий на Consumer <T>, але він приймає 2 параметри, щоб зробити щось.
+
+**BiFunction**
+
+BiFunction <T, U, R> те саме, що Function <T, R>, але для виконання чогось може прийняти 2 параметри.
 
 # Домашнє завдання
 
-## Варіанти
+Доробіть до структури даних, яка була розроблена на минулій лабораторній роботі:
+
+1. Користувацький Exception, який може бути викинутий, якщо індекс переданий в метод get() від'ємний або знаходиться за межами діапазону. Розробние виключення unchecked.
+2. Зробіть метод transform в структурі даних, який приймає першим параметром індекс елемента, другим(функціональний інтерфейс, який вибраний Вами). Метод повинен передати знайдений елемент, ззовні його можуть модифікувати і повернути модифікований елемент.
 
 # Контрольні запитання
 
