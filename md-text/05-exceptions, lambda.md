@@ -452,6 +452,56 @@ public class Example{
 }
 ```
 
+Можна визначити функціональний інтерфейс, який є загальним для типу X і має функціональний метод, який приймає два аргументи типу X і повертає значення типу X.
+
+```java
+@FunctionalInterface
+interface ArgumentsProcessor<X>
+{
+    X process(X arg1, X arg2);
+}
+```
+
+Приклад використання:
+
+```java
+@FunctionalInterface
+interface ArgumentsProcessor<X>
+{
+    X process(X arg1, X arg2);
+}
+
+class IntArgSystem {
+	private ArgumentsProcessor<Integer> processor;
+	
+	public IntArgSystem(ArgumentsProcessor<Integer> processor) {
+		this.processor = processor;
+	}
+	
+	public Integer process(Integer a, Integer b) {
+		return this.processor.process(a, b);
+	}
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		IntArgSystem argSystem = new IntArgSystem((a, b) -> a + b);
+		System.out.println(argSystem.process(2, 3));
+	}
+}
+```
+
+Можна визначити функціональний інтерфейс, який обмежений певними типами, використовуючи ключове слово розширення, тобто X extends Number:
+
+```java
+@FunctionalInterface
+public interface ArgumentsProcessor<X extends Number>
+{
+    X process(X arg1, X arg2);
+}
+```
+
 ### Вбудовані функціональні інтерфейси
 
 ## Приклади
