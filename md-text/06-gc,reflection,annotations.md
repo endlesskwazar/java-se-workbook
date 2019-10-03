@@ -2,6 +2,10 @@
 
 ${toc}
 
+# GC
+
+Інформація в презентації
+
 # Java Reflection API
 
 # Annotations
