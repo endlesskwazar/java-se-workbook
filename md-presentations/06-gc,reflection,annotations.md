@@ -241,3 +241,50 @@ Young generation в свою чергу поділений на 3 простор
 
 ### GC
 ![](../resources/img/6/11.png)
+
+
+### GC
+Види GC:
+
+- Serial collector: працює в тому потоці, що і додаток
+- Concurrent collector: працює в іншому потоці. "Stop the world" на етапі mark/re-mark
+- parallel collector: Використовує багато потоків і ядер для своєї роботи. Працює лише коли heap повний. "stops the world" коли працює
+
+
+### GC
+![](../resources/img/6/12.png)
+
+
+### GC
+
+Використовуйте concurent collector: 
+
+- багато пам'яті
+- багато CPU
+- Додаток повинен зупинятися якомога менше
+
+
+### GC
+
+Використовуйте parallel collector: 
+
+- мало пам'яті
+- мало CPU
+- додаток не вразливий до пауз
+
+
+### GC
+![](../resources/img/6/13.png)
+
+
+### GC
+
+finalizer:
+
+```java
+protected void finalize() throws Throwable
+```
+
+- Виконайється коли об'єкт знищуватиметься
+- Нема упевненості, коли об'єкт буде знищено
+- JDK 9, finilize deprecated
