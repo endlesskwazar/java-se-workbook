@@ -627,3 +627,197 @@ Double d = (Double) method.invoke(obj, args);
 Method method = c.getDeclaredMethod("getCalculateRating", paramTypes); 
 method.setAccessible(true);
 ```
+
+
+
+## Анотації
+
+
+### Анотації
+
+- Анотацій в Java, є свого роду мітками в коді, що описують метадані для метода / класу / пакета.
+- Наприклад, всім відома анотація @Override, що позначає, що ми збираємося перевизначити метод батьківського класу. Так, з одного боку можна і без неї, але якщо у батьків не виявиться цього методу, існує ймовірність, що ми даремно писали код, тому що конкретно цей метод може і не викликатися ніколи
+- Однак Анотації можуть нести в собі не тільки зміст "для надійності", в них можна зберігати якісь дані, які після використовуватимуться.
+
+
+### Анотації
+Опис анотації починається зі створення інтерфейсу:
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@interface StrMinMax {
+	int min();
+	int max();
+}
+```
+
+
+### Анотації
+
+- Зверніть увагу, що перед ключовим словом interface потрібно поставити '@`, що робе опис інтерфейсу анотацією.
+- Також для створення власної анотації, ми використали анотації Retention, Target.
+
+
+### Анотації. Retention
+
+**Retention** - ця анотація встановлює видимість анотації, до якої вона застосовується. Видимість може бути встановлена ​​для трьох різних рівнів:
+
+- Compilers
+- Tools
+- Runtime
+
+
+### Анотації. Retention
+
+Видимість встановлюється за допомогою параметра RetentionPolicy, який є перечисленням із наступними полями:
+
+- SOURCE - видна лише компілятору і не міститься в .class - файлі
+- CLASS - видна в .class файлі, але не доступна віртуальній машині
+- RUNTIME - доступна віртеальній машині
+
+
+### Анотації. Target
+
+**Target** вказує на тип(поле, метод і т.д.) до якого анотація буде застосована.
+
+|Значення|Пояснення|
+|-|-|
+|ElementType.TYPE|Будь-який тип|
+|ElementType.FIELD|Поле|
+|ElementType.PARAMETER|Параметр методу|
+|ElementType.CONSTRUCTOR|Конструктор|
+|ElementType.LOCAL_VARIABLE|Локальна змінна|
+|ElementType.ANNOTATION_TYPE|Анотація|
+
+
+### Анотації
+Тепер, коли в нас є створена анотація давайте її застосуємо:
+
+```java
+class Student {
+	@StrMinMax(min=3, max=20)
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Student(String name) {
+		super();
+		this.name = name;
+	}
+	
+}
+```
+
+
+### Анотації
+Оскільки анатоція сама по собі носить лише інформативний характер(містить дані). Потрібно написати код, який буде використовувати ці дані. Але перед цим давайте створимо власний Exception:
+
+```java
+class ModelIsNotValidException extends RuntimeException {
+	public ModelIsNotValidException(String errorMessage) {
+		super(errorMessage);
+	}
+}
+```
+
+
+### Анотації
+І використовуючи рефлекцію, напищимо код, використає інформацію анотації:
+
+```java
+for(Field f : s.getClass().getDeclaredFields()) {
+	if (f.isAnnotationPresent(StrMinMax.class)) {
+		if (f.getType() != String.class)
+			continue;
+		StrMinMax strMinMax = f.getAnnotation(StrMinMax.class);
+		f.setAccessible(true);
+		String value =(String) f.get(s);
+		if (value == null || value.length() < strMinMax.min() || value.length() > strMinMax.max())
+			throw new ModelIsNotValidException("String max min validation not passed");
+	}
+}
+```
+
+
+### Анотації
+Код повністю:
+
+```java
+package demo;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@interface StrMinMax {
+	int min();
+	int max();
+}
+
+class Student {
+	@StrMinMax(min=3, max=20)
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Student(String name) {
+		super();
+		this.name = name;
+	}
+	
+}
+
+class ModelIsNotValidException extends RuntimeException {
+	public ModelIsNotValidException(String errorMessage) {
+		super(errorMessage);
+	}
+}
+
+public class Main {
+
+	public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException {
+		Student s = new Student("A");
+		
+		try {
+			for(Field f : s.getClass().getDeclaredFields()) {
+				if (f.isAnnotationPresent(StrMinMax.class)) {
+					if (f.getType() != String.class)
+						continue;
+					StrMinMax strMinMax = f.getAnnotation(StrMinMax.class);
+					f.setAccessible(true);
+					String value =(String) f.get(s);
+					if (value == null || value.length() < strMinMax.min() || value.length() > strMinMax.max())
+						throw new ModelIsNotValidException("String max min validation not passed");
+				}
+			}
+		
+		}
+		catch(ModelIsNotValidException e ) {
+			System.out.println("Model is not valid: " + e.getMessage());
+		}
+		
+	}
+}
+```
