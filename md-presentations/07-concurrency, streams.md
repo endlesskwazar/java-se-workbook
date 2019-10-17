@@ -282,10 +282,123 @@ public class Main {
 
 
 
-## Optinal
+## Optional
+
+
+### Optional
+```java
+class Student {
+	private String name;
+
+	public Student(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+}
+
+public class Main {
+	
+	public static Student findStudentByName(String name) {
+		return null;
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		Student s = findStudentByName("Alex");
+		System.out.println(s.getName());
+	}
+}
+```
+
+
+### Optional
+- Optional is a container object used to contain not-null objects. Optional object is used to represent null with absent value. This class has various utility methods to facilitate code to handle values as ‘available’ or ‘not available’ instead of checking null values. It is introduced in Java 8 and is similar to what Optional is in Guava.
+
+
+### Optional
+|Method|Description|
+|-|-|
+|T get()|If a value is present in this Optional, returns the value, otherwise throws NoSuchElementException.|
+|void ifPresent(Consumer<? super T> consumer)|If a value is present, it invokes the specified consumer with the value, otherwise does nothing.|
+|If a value is present, it invokes the specified consumer with the value, otherwise does nothing.|If a value is present, it invokes the specified consumer with the value, otherwise does nothing.|
 
 
 ### Optinal
+```java
+class Student {
+	private String name;
+
+	public Student(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+}
+
+public class Main {
+	
+	public static Optional<Student> findStudentByName(String name) {
+		return Optional.empty();
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		Optional<Student> s = findStudentByName("Alex");
+		if (s.isPresent()) {
+			System.out.println("Student is present");
+		}
+	}
+}
+```
+
+
+### Optinal
+```java
+class Student {
+	private String name;
+
+	public Student(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+}
+
+public class Main {
+	
+	public static Optional<Student> findStudentByName(String name) {
+		return Optional.of(new Student("Alex"));
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		Optional<Student> s = findStudentByName("Alex");
+		if (s.isPresent()) {
+			System.out.println("Student is present");
+		}
+		s.ifPresent(stud -> System.out.println(stud.getName()));
+	}
+}
+```
 
 
 
