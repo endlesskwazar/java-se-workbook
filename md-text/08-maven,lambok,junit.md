@@ -475,6 +475,147 @@ Scope - залежностей це область видимості залеж
 
 # junit
 
+**Модульне тестування** (Unit testing) - тестування кожної атомарної функціональності програми окремо, в штучно створеному середовищі. Ідея полягає в тому, щоб писати тести для кожної нетривіальною функції або методу. Це дозволяє досить швидко перевірити, чи не призвело чергову зміну коду до регресії, тобто до появи помилок в уже протестованих місцях програми, а також полегшує виявлення і усунення таких помилок.
+
+**JUnit** - це фреймворк автоматичного тестування вашого хорошого чи не зовсім коду.
+
+**JUnit** базується на статичних методах класу [Assert](http://junit.sourceforge.net/javadoc/org/junit/Assert.html) і анотаціях(або класах TestCase, TestSuite).
+
+Анотації:
+
+|Анотація|Пояснення|
+|-|-|
+|@Test|Це анотація є заміною org.junit.TestCase, яка вказує на те, що public void метод, до якого він додається, може бути виконаний як тестовий випадок.|
+|@Before|Ця внотація використовується, якщо ви хочете виконати якийсь код перед кожним тестовим випадком.|
+|@BeforeClass|Ця анотація використовується, якщо ви хочете виконати деякі заяви перед усіма тестовими випадками, наприклад, перевірка підключення до джерела даних.|
+|@After|Ця анотація може бути використана, якщо ви хочете виконати деякі оператори після кожного тестового випадку, наприклад, для скидання змінних, видалення тимчасових файлів, змінних тощо.|
+|@AfterClass|Ця анотація може бути використана, якщо ви хочете виконати деякі вирази після всіх тестових випадків, наприклад звільнення ресурсів після виконання всіх тестових випадків.|
+
+Створимо новий maven - проект, використовуючи maven-archetype-quickstart. Переконаймося, що pom.xaml мфстить залежність на JUnit:
+
+```xml
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.12</version>
+    <scope>test</scope>
+</dependency>
+```
+
+і встановленя версія JDK в pom.xaml не менше 1.7:
+
+```xml
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+```
+
+Створимо клас BracketsChaker, задача, якого перевірити правильність відкриваючих і закриваючих дужок:
+
+```java
+import java.util.Stack;
+
+public final class BracketsChaker {
+	private final String testValue;
+	
+	public BracketsChaker(String testValue) {
+		this.testValue = testValue;
+	}
+	
+	public boolean test() {
+		if (this.testValue.isEmpty())
+	        return true;
+
+	    Stack<Character> stack = new Stack<Character>();
+	    for (int i = 0; i < this.testValue.length(); i++)
+	    {
+	        char current = this.testValue.charAt(i);
+	        if (current == '{' || current == '(' || current == '[')
+	        {
+	            stack.push(current);
+	        }
+
+
+	        if (current == '}' || current == ')' || current == ']')
+	        {
+	            if (stack.isEmpty())
+	                return false;
+
+	            char last = stack.peek();
+	            if (current == '}' && last == '{' || current == ')' && last == '(' || current == ']' && last == '[')
+	                stack.pop();
+	            else 
+	                return false;
+	        }
+
+	    }
+
+	    return stack.isEmpty();
+	}
+}
+```
+
+Протестуємо, наче працює:
+
+```java
+public class App 
+{
+    public static void main( String[] args )
+    {
+        String pattern = "(({}))";
+        BracketsChaker bracketsChaker = new BracketsChaker(pattern);
+        if (bracketsChaker.test()) {
+        	System.out.println("Pattern is ok");
+        }
+        else {
+        	System.out.println("Pattern isn`t ok");
+        }
+    }
+}
+```
+
+![](../resources/img/8/19.png)
+
+Але, для впевненості протестуваємо, використовуючи JUnit:
+
+```java
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class BracketsCheckerTest {
+	
+	@Test
+	public void test_brackets_ok() {
+		List<String> patterns = Arrays.asList("()", "{}", "(())", "({})");
+		for(String pattern : patterns) {
+			BracketsChaker bracketsChaker = new BracketsChaker(pattern);
+			assertTrue(bracketsChaker.test());
+		}
+	}
+	
+	@Test
+	public void test_brackets_not_ok() {
+		List<String> patterns = Arrays.asList("(", "}", "())", "({}");
+		for(String pattern : patterns) {
+			BracketsChaker bracketsChaker = new BracketsChaker(pattern);
+			assertFalse(bracketsChaker.test());
+		}
+	}
+	
+}
+```
+
+Для запуска тестів запустимо фазу test maven:
+
+![](../resources/img/8/20.png)
+
+![](../resources/img/8/21.png)
+
 # Домашнє завдання
 
 # Контрольні запитання
