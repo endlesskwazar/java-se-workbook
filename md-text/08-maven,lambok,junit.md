@@ -756,7 +756,11 @@ public class BracketsCheckerTest {
 
 # Домашнє завдання
 
+Доробіть до проекту [java-se-examples](https://github.com/endlesskwazar/java-se-examples) гілка rpn:
 
+1. Обчислення postfix - виразу.
+2. Переробіть весь RPN - алгоритм із використанням ООП.
+3. Напишіть тести.
 
 # Контрольні запитання
 
