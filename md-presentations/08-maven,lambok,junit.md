@@ -727,6 +727,7 @@ Scope - залежностей це область видимості залеж
 |provided|Область дії provided аналогічна compile, за винятком того, що артефакт використовується на етапі компіляції і тестування, а в збірку не включається.|
 
 
+
 ## junit
 
 
@@ -776,8 +777,6 @@ Scope - залежностей це область видимості залеж
 
 
 ### junit
-Створимо клас BracketsChaker, задача, якого перевірити правильність відкриваючих і закриваючих дужок:
-
 ```java
 import java.util.Stack;
 
@@ -792,7 +791,7 @@ public final class BracketsChaker {
 		if (this.testValue.isEmpty())
 	        return true;
 
-	    Stack<Character> stack = new Stack<Character>();
+	    Stack< Character > stack = new Stack< Character >();
 	    for (int i = 0; i < this.testValue.length(); i++)
 	    {
 	        char current = this.testValue.charAt(i);
@@ -800,7 +799,6 @@ public final class BracketsChaker {
 	        {
 	            stack.push(current);
 	        }
-
 
 	        if (current == '}' || current == ')' || current == ']')
 	        {
@@ -813,9 +811,7 @@ public final class BracketsChaker {
 	            else 
 	                return false;
 	        }
-
 	    }
-
 	    return stack.isEmpty();
 	}
 }
