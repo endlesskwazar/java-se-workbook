@@ -6,7 +6,7 @@ ${toc}
 
 Минуло вісім років після зародження проекту Jigsaw, завдання якого полягає в модулярізаціі платформи Java і зводиться до впровадження загальної системи модулів. Jigsaw вперше з'явився у версії Java 9. Цей реліз раніше планувався і до виходу Java 7, і до Java 8.
 
-Першопочатковою ціллю Jigsaw було не надати програмістам систему модулів, а розбити моноліт java платформи. Пысля появи JIgsaw і мудульної Java можна скласти власну версію платформи не включаючи ті модулі, що Вам не потрібно використовувати, що зменшить розмір самої платформи.
+Першопочатковою ціллю Jigsaw було не надати програмістам систему модулів, а розбити моноліт java платформи. Після появи JIgsaw і мудульної Java можна скласти власну версію платформи не включаючи ті модулі, що Вам не потрібно використовувати, що зменшить розмір самої платформи.
 
 Подивится перелік модулів:
 
@@ -27,6 +27,144 @@ ${toc}
 ![](../resources/img/8/1.png)
 
 
+Створимо наступну структуру директорій:
+
+![](../resources/img/8/22.png)
+
+First.java:
+```java
+package first.com.demo;
+
+public class First {
+
+    public String getInfo() {
+        return "First";
+    }
+
+}
+```
+
+Second.java:
+```java
+package second.com.demo;
+import first.com.demo.First;
+
+public class Second {
+
+    public String getInfo() {
+        return "second";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Second().getInfo());
+        System.out.println(new First().getInfo());
+    }
+
+}
+```
+
+Збудуємо проект наступним build.sh файлом:
+
+```bash
+/bin/rm -rf output
+
+mkdir -p output/mlib
+
+javac -d output/classes `find first -name *.java`
+jar -c -f output/mlib/first.jar -C output/classes .
+/bin/rm -rf output/classes
+
+mkdir -p output/classes
+javac -d output/classes -classpath output/mlib/first.jar `find second -name *.java`
+jar -c -f output/mlib/second.jar -C output/classes .
+/bin/rm -rf output/classes
+
+java -classpath output/mlib/first.jar:output/mlib/second.jar second.com.demo.Second
+```
+
+Тут було використання змінна classPath. classpath - це шлях, в якому віртуальна машина Java шукає призначені для користувача класи, пакети і ресурси в програмах Java.
+
+Використовуючи jigsaw крім classpath існує і інший простір - module path. І програмістам вирішувати в який простір класти залежності.
+
+Давайте змінимо build.sh наступним чином:
+
+```bash
+/bin/rm -rf output
+
+mkdir -p output/mlib
+
+javac -d output/classes `find first -name *.java`
+jar -c -f output/mlib/first.jar -C output/classes .
+/bin/rm -rf output/classes
+
+mkdir -p output/classes
+javac -d output/classes -classpath output/mlib/first.jar `find second -name *.java`
+jar -c -f output/mlib/second.jar -C output/classes .
+/bin/rm -rf output/classes
+
+java -p output/mlib -m second/second.com.demo.Second
+```
+
+Ми змінили -classpath на -p, де p - це скорочення для modulepath. І позбулися від ручного списку jar - файлів. І за допомогою параметра -m встановили ім'я модуля, який необхідно запустити.
+
+Ім'я модуля не завжди збігається із ім'ям jar - файла. Дізнатися ім'я модуля можна за допомогою команди:
+
+```bash
+jar -f output/mlib/second.jar -d
+```
+
+![](../resources/img/8/23.png)
+
+Тепер в Java існують 3 типи модулів:
+
+- Unnamed module - всі класи, які знаходяться в classpath
+- Automatic module - старий jar, який був поміщений в modulepath
+- Explicitly named modules - модулі, які мають дескриптор модуля
+
+Unnamed і Automatic модулі ми вже розглянули. Тепер розглянемо Explicitly named modules.
+
+Модифікуємо структуру проекту наступним чином:
+
+![](../resources/img/8/24.png)
+
+first/module-info.java:
+```java
+module thefirst {
+    exports first.com.demo;
+}
+```
+
+second/module-info.java:
+```java
+module thesecond {
+    requires thefirst;
+}
+```
+
+І модифікуємо build.sh:
+
+```bash
+/bin/rm -rf output
+
+mkdir -p output/mlib
+
+javac -d output/classes `find first -name *.java`
+jar -c -f output/mlib/first.jar -C output/classes .
+/bin/rm -rf output/classes
+
+mkdir -p output/classes
+javac -d output/classes -p output/mlib/first.jar `find second -name *.java`
+jar -c -f output/mlib/second.jar -C output/classes .
+/bin/rm -rf output/classes
+
+java -p output/mlib -m thesecond/second.com.demo.Second
+```
+
+```bash
+jar -f output/mlib/second.jar -d
+```
+
+![](../resources/img/8/25.png)
 
 # Lombok
 
@@ -382,7 +520,7 @@ mvn package
 
 ![](../resources/img/8/11.png)
 
-## Maven architypes
+## Maven archetypes
 
 Звісно створювати maven - проекти вручну буває доволі довго і важко. Тому в Maven існує система Archetypes.
 
@@ -617,6 +755,8 @@ public class BracketsCheckerTest {
 ![](../resources/img/8/21.png)
 
 # Домашнє завдання
+
+
 
 # Контрольні запитання
 
