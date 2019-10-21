@@ -539,7 +539,7 @@ ypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.3
 
 ![](../resources/img/8/14.png)
 
-Перегляну список [archetypes](https://gist.github.com/zbigniewTomczak/4235871)
+Переглянути список [archetypes](https://gist.github.com/zbigniewTomczak/4235871)
 
 Тепер детальніше про структуру maven-проекту:
 
