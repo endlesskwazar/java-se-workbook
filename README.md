@@ -10,17 +10,15 @@
 
 |Лекція|Пояснення|
 |-|-|
-|Вступ до екосистеми Java||
-|ООП||
-|Java Garnage Collector||
-|Java Collection Framework||
-|Анотації||
-|Lambda||
-|Concurrency||
-|Java Streams||
-|Maven. Unit - тестування||
-|XML||
-|JDBC||
+|01-intro||
+|02-oop||
+|03-boxing,unboxing,string||
+|04-generics, collection framework||
+|05-exceptions, lambda||
+|06-gc,reflection,annotations||
+|07-concurrency, streams||
+|08-maven,lambok,junit||
+|09-jdbc||
 
 # Колабораціонізм
 
