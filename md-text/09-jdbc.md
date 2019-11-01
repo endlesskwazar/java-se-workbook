@@ -732,11 +732,11 @@ public class Main {
 
 # Завантажити проект
 
-Проект доступний на репозиторії [java-se-examples](https://github.com/endlesskwazar/java-ee-examples.git) branch: jdbc
+Проект доступний на репозиторії [java-se-examples](https://github.com/endlesskwazar/java-se-examples) branch: jdbc
 
 # Домашнє завдання
 
-Реалізуйте шаблон DAO з використанням JDBC. Модель згідно із варіантом. Проет залийте на гілку **lb1**.
+Реалізуйте шаблон DAO з використанням JDBC. Модель згідно із варіантом.
 
 ## Варіанти
 
